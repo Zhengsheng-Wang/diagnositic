@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "F:/Qt/5.15.0/mingw81_64/include/**",
+                "F:/Python/Python38/include/**"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "F:/Qt/5.15.0/mingw81_64/include",
+                    "F:/Python/Python38/include"
+                ]
+            },
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__STDCPP_DEFAULT_NEW_ALIGNMENT__"
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "F:/Qt/Tools/mingw810_64/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

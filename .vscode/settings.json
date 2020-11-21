@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "qgraphicspolygonitem": "cpp",
+        "qgraphicspixmapitem": "cpp"
+    }
+}
