@@ -29,6 +29,9 @@ set(sources
     main.cpp
     mainwindow.cpp
     commander.cpp
+    diagram.cpp
+    element.cpp
+    arrow.cpp
 )
 
 # name of the .exe file, window flag and the list of things to compile

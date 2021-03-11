@@ -9,6 +9,7 @@ MainWindow::MainWindow(){
     create_actions();
     // 手动检测
     create_manual();
+
     // 自动检测
     create_auto();
     // 查询
@@ -26,7 +27,7 @@ MainWindow::MainWindow(){
         auto_box->setChecked(false);
         manual_box->setChecked(false);
     });
-    // 需要设置时间间隔的模块在第一次被激活的时候初始化间隔时间
+    // 设置时间间隔的模块在第一次被激活的时候初始化间隔时间
     connect(auto_box, &QGroupBox::clicked, this, [=]{
         initial_interval(auto_start_year, auto_start_month, auto_start_date);
         initial_interval(auto_end_year, auto_end_month, auto_end_date);
@@ -35,26 +36,30 @@ MainWindow::MainWindow(){
         initial_interval(query_start_year, query_start_month, auto_start_date);
         initial_interval(query_end_year, query_end_month, auto_end_date);
     });
-    // 展示窗口
-    scene = new QGraphicsScene(this);
-    scene->setSceneRect(QRectF(0, 0, 8000, 5000));
-    view = new QGraphicsView(scene);
 
     // 设置配置文件夹
     comm.set_config_dir();
     // 读入已检测的卫星，查询部分需要用来建立list
     comm.read_sat_names();
 
-
     // 将界面的中心区域设计成左右结构
     QHBoxLayout *layout_h = new QHBoxLayout;
-    //
-    QVBoxLayout *layout_v = new QVBoxLayout;
+    // 控制界面竖排结构
+    QVBoxLayout *layout_v = new QVBoxLayout(this);
     layout_v->addWidget(manual_box);
     layout_v->addWidget(auto_box);
     layout_v->addWidget(query_box);
-    layout_h->addLayout(layout_v, 1);
-    layout_h->addWidget(view, 2);
+    layout_h->addLayout(layout_v, 0);
+    layout_h->setStretch(0, 1);
+
+    //layout_h->addWidget(viewer_box, 1);
+    system = new Diagram(this);
+    reset_scene = new QPushButton(tr("重置"));
+    QGridLayout *layout_viewer = new QGridLayout;
+    layout_viewer->addWidget(system, 0, 0, 9, 3);
+    layout_viewer->addWidget(reset_scene, 9, 2);
+    layout_h->addLayout(layout_viewer, 1);
+    layout_h->setStretch(1, 2);
 
     // 中心控件为水平布局
     QWidget *central_widget = new QWidget;
@@ -312,6 +317,21 @@ void MainWindow::create_query(){
     layout_v->addLayout(layout_h_confirm);
 
     query_box->setLayout(layout_v);
+}
+
+// System viewer.
+void MainWindow::create_system_viewer(){
+    viewer_box = new QGroupBox(tr("系统视图"));
+    viewer_box->setCheckable(false);
+
+    system = new Diagram(this);
+    reset_scene = new QPushButton(tr("重置显示区域"));
+
+    // Layout.
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(viewer_box);
+    layout->addWidget(reset_scene);
+    viewer_box->setLayout(layout);
 }
 
 void MainWindow::choose_job(){

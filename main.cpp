@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 
+#include <iostream>
 #include <QApplication>
 
+#include <QTransform>
 int main(int argv, char *args[])
 {
     Q_INIT_RESOURCE(diagnostic); // 删掉也可以
@@ -17,4 +19,3 @@ int main(int argv, char *args[])
 
     return app.exec();
 }
-

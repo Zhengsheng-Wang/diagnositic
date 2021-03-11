@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <qtwidgets>
 #include "commander.h"
+#include "diagram.h"
 
 //! [0]
 class MainWindow : public QMainWindow
@@ -19,6 +20,7 @@ public:
    void create_manual();
    void create_auto();
    void create_query();
+   void create_system_viewer();
 
 
 private slots:
@@ -37,83 +39,91 @@ private:
     QAction *about_action;
     QToolBar *auxiliary_toolbar;
 
-    // 手动检测
+    /*
+    Mannual diagnosis.
+    We use a QLineEdit to input or choose a task file path.
+    */
     QGroupBox *manual_box;
-
+    // Task file path.
     QLabel *manual_label;
     QLineEdit *manual_text;
-
     QPushButton *manual_browse;
     QPushButton *manual_confirm;
-    // 自动检测
-    QGroupBox *auto_box;
+    // Progress bar.
+    QProgressBar *manual_progress_bar;
 
-    // 卫星名
-    QLabel *auto_sat_label;
-    QLineEdit *auto_sat;
-    // 起始时间
+    /*
+    In automatic diagnosis box, we use QComboBox choose the diagnosis time interval. 
+    Diagnosis time interval is composed by a start time and a end time. When we confirm
+    the time interval by click the "确认诊断时间" the number of tasks being diagnosed is displayed
+    in the QLabel following "任务数" QLabel. Not until we clicke "开始自动诊断" QPushButton does the
+    diagnosis process start.
+    */
+    QGroupBox *auto_box;
+    // Start time.
     QLabel *auto_start_time;
-    // 年份
     QLabel *auto_start_year_label;
     QComboBox *auto_start_year;
-    // 月份
     QLabel *auto_start_month_label;
     QComboBox *auto_start_month;
-    // 日期
     QLabel *auto_start_date_label;
     QComboBox *auto_start_date;
-    // 结束时间
+    // End time.
     QLabel *auto_end_time; 
-    // 年份
     QLabel *auto_end_year_label;
     QComboBox *auto_end_year;
-    // 月份
     QLabel *auto_end_month_label;
     QComboBox *auto_end_month;
-    // 日期
     QLabel *auto_end_date_label;
     QComboBox *auto_end_date;
-    // 确定诊断时间
+    // Comfirm button.
     QPushButton *auto_confirm_interval;
-    
-    // 显示一共需要检测的任务数
+    // The number of tasks to be diagnosed.
     QLabel *auto_nums_label;
     QLineEdit *auto_nums;
-    // 确定
+    // Confirm button.
     QPushButton *auto_confirm;
-    // 查询
+    // Progress bar.
+    QProgressBar *auto_progress_bar;
+
+    /*
+    Query diagnosis result stored in database.
+    We choose the name of the queried satellite in a "QComboBox".
+    Then we choose time interval using QComboBox and kick off the query by clicking a 
+    QPushButton. Note the satellite name QComboBox and time QComboBox only show the information
+    existing in database.
+    */
     QGroupBox *query_box;
-    // 卫星名
+    // Name of satellite.
     QLabel *query_sat_label;
     QLineEdit *query_sat;
-    // 起始时间
+    // Start time.
     QLabel *query_start_time;
-    // 年份
     QLabel *query_start_year_label;
     QComboBox *query_start_year;
-    // 月份
     QLabel *query_start_month_label;
     QComboBox *query_start_month;
-    // 日期
     QLabel *query_start_date_label;
     QComboBox *query_start_date;
-    // 结束时间
+    // End time. 
     QLabel *query_end_time; 
-    // 年份
     QLabel *query_end_year_label;
     QComboBox *query_end_year;
-    // 月份
     QLabel *query_end_month_label;
     QComboBox *query_end_month;
-    // 日期
     QLabel *query_end_date_label;
     QComboBox *query_end_date;
-
+    // Query confirm button.
     QPushButton *query_confirm;
 
-    // 展示
-    QGraphicsView *view;
-    QGraphicsScene *scene;
+    /*
+    This box displays the profile of the receiving system in a QGraphicsView.
+    We supply a button to reset the QGraphicsScene in the proper viewport position 
+    of this QGraphicsView.
+    */
+    QGroupBox *viewer_box;
+    Diagram *system;
+    QPushButton *reset_scene;
 
 private:
     QString job_path;
