@@ -16,6 +16,7 @@ message("Looking for Qt...")
 # Qt modules (https://doc.qt.io/qt-5/qtmodules.html) you're using in your application
 set(CMAKE_PREFIX_PATH "F:/Qt/5.15.0/mingw81_64")
 
+# Qt package.
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 if (${Qt5_FOUND})
     message("Found Qt " ${Qt5_VERSION})
@@ -23,7 +24,13 @@ else()
     message("Couldn't find Qt")
 endif()
 
+# Python pacakge.
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
+# Resource file.
 set(QRC_FILES diagnostic.qrc)
+
 # your source files
 set(sources
     main.cpp
@@ -34,6 +41,7 @@ set(sources
     arrow.cpp
 )
 
+set(CMAKE_BUILD_TYPE Debug)
 # name of the .exe file, window flag and the list of things to compile
 add_executable(${CMAKE_PROJECT_NAME} WIN32 ${sources} ${QRC_FILES})
 
@@ -42,4 +50,5 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 ${sources} ${QRC_FILES})
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     Qt5::Widgets
+    ${PYTHON_LIBRARIES}
     )

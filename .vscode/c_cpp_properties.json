@@ -4,11 +4,13 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "F:/Qt/5.15.0/mingw81_64/include/**"
+                "F:/Qt/5.15.0/mingw81_64/include/**",
+                "F:/Python/Python38/include/**"
             ],
             "browse": {"path": [
                 "${workspaceFolder}",
-                "F:/Qt/5.15.0/mingw81_64/include"
+                "F:/Qt/5.15.0/mingw81_64/include",
+                "F:/Python/Python38/include"
             ]},
             "defines": [
                 "_DEBUG",

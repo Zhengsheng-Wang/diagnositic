@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <qtwidgets>
+
 #include "commander.h"
 #include "diagram.h"
 
@@ -10,27 +11,32 @@
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
    MainWindow();
 
    void decorate(); 
    void create_actions(); 
-   //void create_toolbars();
+    // Create manual operating console.
    void create_manual();
+   // Create automatic operating console.
+public:
    void create_auto();
+   // Create queray diagnostic result console.
    void create_query();
    void create_system_viewer();
-
+private:
+    void show_CurDir();
 
 private slots:
     // 显示帮助信息
     void about();
-    // 选择检测任务
+    // Choose a diagnostic task from local file system.
     void choose_job();
+    void diagnose_tasks();
     // 初始化时间间隔
     // 利用系统现有时间初始化
     void initial_interval(QComboBox*, QComboBox*, QComboBox*);
+    // Reset the view field of the QGraphicsView of diagnostic system.
 
 private:
     // 中枢
@@ -46,7 +52,9 @@ private:
     QGroupBox *manual_box;
     // Task file path.
     QLabel *manual_label;
+public:
     QLineEdit *manual_text;
+private:
     QPushButton *manual_browse;
     QPushButton *manual_confirm;
     // Progress bar.
@@ -126,7 +134,8 @@ private:
     QPushButton *reset_scene;
 
 private:
-    QString job_path;
+    // Diagnostic jobs' zip paths.
+    QStringList diagnostic_jobPaths;
     // 根据年份、月份确定天数
     void set_days(QComboBox*, QComboBox*, QComboBox*);
 };

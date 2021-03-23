@@ -18,7 +18,6 @@ public:
 private:
     Element *source, *dest;
     QPointF source_point, dest_point;
-    // Arrow width.
     int arrow_width = 2;
 };
 

@@ -15,6 +15,9 @@ struct Commander{
     void set_config_dir(const QString& d="config");
     void scan_sat_names();
     void read_sat_names();
+
+    // Run Python code.
+    void run_PythonCode();
 private:
     void add_sat_names(const QStringList&);
 };

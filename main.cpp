@@ -1,9 +1,12 @@
+#include <iostream>
+
+#include "Python.h"
+
+#include <QApplication>
+#include <QTransform>
+
 #include "mainwindow.h"
 
-#include <iostream>
-#include <QApplication>
-
-#include <QTransform>
 int main(int argv, char *args[])
 {
     Q_INIT_RESOURCE(diagnostic); // 删掉也可以
@@ -13,9 +16,16 @@ int main(int argv, char *args[])
 
     QApplication app(argv, args);
 
+    Py_Initialize();
+
     MainWindow mainWindow;
     mainWindow.setGeometry(100, 100, 800, 500);
     mainWindow.show();
 
-    return app.exec();
+    int exec_state = app.exec();
+
+    if(Py_FinalizeEx() < 0){
+        return 120;
+    }
+    return exec_state;
 }

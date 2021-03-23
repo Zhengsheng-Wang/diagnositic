@@ -1,6 +1,9 @@
-#include "mainwindow.h"
 #include <vector>
 #include <algorithm>
+
+#include <Python.h>
+
+#include "mainwindow.h"
 
 MainWindow::MainWindow(){
     // 装饰
@@ -55,6 +58,8 @@ MainWindow::MainWindow(){
     //layout_h->addWidget(viewer_box, 1);
     system = new Diagram(this);
     reset_scene = new QPushButton(tr("重置"));
+    connect(reset_scene, SIGNAL(clicked(bool)), system, SLOT(reset_scene_rect()));
+    // Distribute the widgets of Graphics view.
     QGridLayout *layout_viewer = new QGridLayout;
     layout_viewer->addWidget(system, 0, 0, 9, 3);
     layout_viewer->addWidget(reset_scene, 9, 2);
@@ -72,37 +77,69 @@ void MainWindow::decorate(){
     setWindowTitle(tr("故障诊断系统"));
 }
 // 创建工具按钮
-void MainWindow::create_actions(){
-    about_action = new QAction(tr("关于"), this);
-    connect(about_action, &QAction::triggered, this, &MainWindow::about);
-}
-// 手动检测工具箱
+
+//![]
 void MainWindow::create_manual(){
-    // 包含：标签、一行文本（显示任务路径）、浏览按钮
+    // Manual operating console.
     manual_box = new QGroupBox(tr("手动检测"));
     manual_box->setCheckable(true);
 
-    QGridLayout *layout = new QGridLayout;
-    // 标签
+    // Input widgets.
     manual_label = new QLabel(tr("任务路径"));
+    manual_text = new QLineEdit;
+    manual_browse = new QPushButton(tr("浏览"));
+    manual_confirm = new QPushButton(tr("确认"));
+
+    // Layout.
+    QGridLayout *layout = new QGridLayout;
     layout->addWidget(manual_label, 0, 0);
     layout->setColumnStretch(0, 1);
-    // 文本
-    manual_text = new QLineEdit;
     layout->addWidget(manual_text, 0, 1);
     layout->setColumnStretch(1, 5);
-    // 浏览按钮
-    manual_browse = new QPushButton(tr("浏览"));
     layout->addWidget(manual_browse, 0, 2);
     layout->setColumnStretch(2, 1);
-    connect(manual_browse, &QPushButton::clicked, this, &MainWindow::choose_job);
-    // 确认按钮，通过手动输入任务文件路径打开任务
-    manual_confirm = new QPushButton(tr("确认"));
     layout->addWidget(manual_confirm, 0, 3);
     layout->setColumnStretch(3, 1);
-    //connect(manual_confirm, &QPushButton::clicked, this, &MainWindow::);
-
     manual_box->setLayout(layout);
+
+    /* 
+    Choose a task zip file through file exploer by clicking manual_browse.
+    */
+    //connect(manual_browse, &QPushButton::clicked, this, &MainWindow::choose_job);
+    connect(manual_browse, &QPushButton::clicked, this, &MainWindow::show_CurDir);
+}
+
+//![]
+void MainWindow::show_CurDir(){
+    PyObject *py_module_name = PyUnicode_DecodeFSDefault("call_DiagnosticModel");
+    PyObject *py_module = PyImport_Import(py_module_name);
+    Py_DECREF(py_module_name);
+    if(py_module != NULL){
+        PyObject *py_func = PyObject_GetAttrString(py_module, "call_model");
+        if(py_func && PyCallable_Check(py_func)){
+            PyObject *py_value = PyObject_CallObject(py_func, NULL);
+            if(py_value != NULL){
+                manual_text->setText(QObject::tr(Py_EncodeLocale(PyUnicode_AsWideCharString(py_value, NULL), NULL)));
+                Py_DECREF(py_value);
+            }
+            else{
+                manual_text->setText(QObject::tr("py_value is NULL"));
+            }
+        }
+        else{
+            if(!PyCallable_Check(py_func)){
+                manual_text->setText(tr("py_func is not callable"));
+            }
+            if(py_func != NULL){
+                manual_text->setText(tr("py_func is NULL"));
+            }
+        }
+        Py_XDECREF(py_func);
+    }
+    else{
+        manual_text->setText(tr("py_module is NULL"));
+    }
+    Py_XDECREF(py_module);
 }
 // 自动检测工具箱
 void MainWindow::create_auto(){
@@ -334,6 +371,7 @@ void MainWindow::create_system_viewer(){
     viewer_box->setLayout(layout);
 }
 
+//![]
 void MainWindow::choose_job(){
     QFileDialog d(this);
     d.setFileMode(QFileDialog::ExistingFile); 
@@ -341,10 +379,24 @@ void MainWindow::choose_job(){
     d.setViewMode(QFileDialog::Detail);
     d.setDirectory(tr("D:\\workspace\\project_station_code\\zips"));
     if(d.exec()){
-        job_path = d.selectedFiles()[0];  //存储任务文件路径
+        diagnostic_jobPaths = d.selectedFiles();
     }
-    manual_text->setText(job_path);  //显示选择的任务文件路径
+
+    // manual_text shows the name of chosen task's path on not-empty, else shows null string.
+    if(!diagnostic_jobPaths.empty()){
+        manual_text->setText(diagnostic_jobPaths[0]);
+    }
+    else{
+        manual_text->setText(tr(""));
+    }
 }
+//![]
+
+//![]
+void MainWindow::diagnose_tasks(){
+}
+//![]
+
 void MainWindow::about(){
     QMessageBox::about(this, tr("故障诊断"), tr("中国遥感卫星地面站数据接收系统故障诊断系统"));
 }
@@ -381,3 +433,10 @@ void MainWindow::set_days(QComboBox *y, QComboBox *m, QComboBox *d){
         d->addItem(QString::number(i));
     }
 }
+
+//![]
+void MainWindow::create_actions(){
+    about_action = new QAction(tr("关于"), this);
+    connect(about_action, &QAction::triggered, this, &MainWindow::about);
+}
+//![]
