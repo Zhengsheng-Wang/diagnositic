@@ -1,0 +1,6 @@
+{
+    "卫星名": "str(type)",
+    "时间": "str(type)",
+    "正常": "bool(type)",
+    "故障SPU": "str(type)"
+}

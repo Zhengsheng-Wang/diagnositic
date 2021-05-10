@@ -1,27 +1,34 @@
 #include "commander.h"
 
-void Commander::set_config_dir(const QString& d){
-    // 若已经存在配置文件夹，则直接使用
-    cur_dir.mkdir(d);
-    config_dir = QDir(cur_dir);
-    config_dir.cd(d);
+void Commander::setConfigurationDirectory(const QString& configurationDirectoryName){
+    /*
+    Set configuration directory to store configuration information.
+    
+    Side effects.
+    Build configuration directory "configrationDirectoryName" under the current working directory.
+    */
+    currentDirectory.mkdir(configurationDirectoryName);
+    configurationDirectory = QDir(currentDirectory);
+    configurationDirectory.cd(configurationDirectoryName);
 }
-// 添加卫星名称
-void Commander::add_sat_names(const QStringList& names){
+
+void Commander::addSatelliteNames(const QStringList& names){
+    /*
+    */
 }
-// 读入卫星名称，存入名称链表
-void Commander::read_sat_names(){
-    // 卫星是否已加载直接退出
-    if(! sat_names.isEmpty()) return;
+
+void Commander::readSatelliteNames(){
+    if(!satelliteNames.isEmpty()) return;
+
     // 读入卫星数量
     quint32 num;
-    QFile file(config_dir.filePath("sats_num"));
+    QFile file(configurationDirectory.filePath("sats_num"));
     file.open(QIODevice::ReadOnly);
     QDataStream in(&file);
     in >> num;
     // 读入卫星名称
     // 按照卫星数量迭代读入卫星名
-    QFile file1(config_dir.filePath("satellites"));
+    QFile file1(configurationDirectory.filePath("satellites"));
     file1.open(QIODevice::ReadOnly);
     QDataStream in1(&file1);
     QString sat;
@@ -31,7 +38,5 @@ void Commander::read_sat_names(){
     }
 }
 
-// ![]
-void Commander::run_PythonCode(){
+void Commander::runPythonCode(){
 }
-// ![]

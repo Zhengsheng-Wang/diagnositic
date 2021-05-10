@@ -16,6 +16,7 @@ int main(int argv, char *args[])
 
     QApplication app(argv, args);
 
+    // We found Python interpreter here already contains the search path. So we don't set the module search path here.
     Py_Initialize();
 
     MainWindow mainWindow;

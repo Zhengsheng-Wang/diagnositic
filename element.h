@@ -9,40 +9,51 @@ class Diagram;
 
 class Element: public QGraphicsItem{
 public:
-    Element(Diagram *s, const QString &name, qreal w, qreal h, const QString &t);
+    /*
+    Constructor.
+
+    diagram_ -- the abstract diagram of diagnostic diagram.
+    elementName_ -- the name of device or signal processing link.
+    width_ -- the width of element block.
+    height_ -- the height of element block.
+    spuName_ -- the name of spu to which it belongs.
+    */
+    Element(Diagram *diagram_, const QString &elementName_, qreal width_, qreal height_, const QString &spuName_);
 
     enum {Type = UserType + 1};
     int type() const override {return Type;}
 
+    /*
+    Set the bounding rectangle of block in diagram.
+    */
     QRectF boundingRect() const override;
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    QString get_spu_name() const{
-        return spu_name;
+    QString getElementName() const{
+        return elementName;
     }
-    QString get_element_name() const{
-        return element_name;
+    QString getSPUName() const{
+        return spuName;
     }
 
 protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    // spu name.
-    QString spu_name;
-    // Diagram.
-    Diagram *system;
-    // Order number.
-    int order;
-    // Size.
-    qreal width, height;
-    // Outline width.
-    qreal outline_width = 2;
-    // Type.
-    QString element_name;
+    Diagram *diagram; // The profile of diagnostic diagram.
+
+    QString elementName;  // Name of device(for device block) or name of signal processing link.
+
+    qreal width, height; // Block size.
+
+    QString spuName; // Name of spu to which this block belongs.
+
+    qreal outlineWidth = 2; 
 
 public:
-    static QString fault_spu_name;
+    static QString faultDeviceName;  
+    static QString faultSPUName;  
 };
 
 #endif

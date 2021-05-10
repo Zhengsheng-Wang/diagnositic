@@ -35,7 +35,7 @@ set(QRC_FILES diagnostic.qrc)
 set(sources
     main.cpp
     mainwindow.cpp
-    commander.cpp
+    #commander.cpp
     diagram.cpp
     element.cpp
     arrow.cpp
